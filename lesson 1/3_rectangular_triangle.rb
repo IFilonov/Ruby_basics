@@ -8,16 +8,20 @@ sides[2] = gets.to_f
 
 sides.sort!
 
-types = [["rectangular", 0],["isosceles", 0],["equilateral", 0]]
+types = [["rectangular", 0], ["isosceles", 0], ["equilateral", 0]]
 
-if sides[2]**2 == sides[1]**2 + sides[0]**2
+sqrt_hyp = sides[2]**2
+sum_sqrt_cat = sides[1]**2 + sides[0]**2
+
+if sqrt_hyp == sum_sqrt_cat and sides[0] == sides[1]
   types [0][1] = 1
-  types [1][1] = 1 if sides[0] == sides[1]
-end
-if sides[0] == sides[1] and sides[0] == sides[2]
-    types [1][1] = 1
-    types [2][1] = 1
+  types [1][1] = 1
+elsif sqrt_hyp == sum_sqrt_cat
+  types [0][1] = 1
+elsif sides[0] == sides[1] and sides[0] == sides[2]
+  types [1][1] = 1
+  types [2][1] = 1
 end
 
 puts "Triangle is: "
-types.each {|type, ind| puts type if ind == 1 }
+types.each { |type, ind| puts type if ind == 1 }
