@@ -1,6 +1,15 @@
+STEP = 5
+START = 10
+LIMIT = 100
+
 numbers = []
-for i in 2..20
-  numbers.push( i * 5 );
-end
+
+i = START
+
+while i <= LIMIT do
+  numbers.push(i)
+  i += STEP
+  end
+
 p numbers;
 

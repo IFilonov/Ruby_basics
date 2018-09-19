@@ -1,8 +1,8 @@
 vowels_hash = {}
 vowels_arr = ['a', 'e', 'i', 'o', 'u']
-index = 1
-for letter in "a".."z"
-  vowels_arr.each {|vowel| vowels_hash[vowel] = index if letter == vowel}
-  index += 1
+
+("a".."z").each_with_index do |letter, index|
+  vowels_arr.each { |vowel| vowels_hash[vowel] = index+1 if letter == vowel }
 end
+
 puts vowels_hash

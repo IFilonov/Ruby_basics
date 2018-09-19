@@ -7,14 +7,14 @@ month = gets.to_i
 puts "Please, enter year:"
 year = gets.to_i
 
-number_of_day = day
+number_of_day = 0
 
-for index in 2..month
-  number_of_day += day_in_months[index - 2]
+if year % 4 == 0  &&  year % 100 != 0 || year % 400 == 0
+  day_in_months[1] = 29
 end
 
-if ((year % 4 == 0  &&  year % 100 != 0) || year % 400 == 0)
-  number_of_day += 1
-end
+day_in_months.take(month-1).each { |day_in_month| number_of_day += day_in_month }
+
+number_of_day += day
 
 puts number_of_day
