@@ -13,6 +13,8 @@ class Route
     @stations.delete(station) unless [@stations[0], @stations[-1]].include?(station)
   end
 
+  private
+  #не используются снаружи класса Route
   def put_stations_name
     @stations.each { |station| puts station.name }
   end

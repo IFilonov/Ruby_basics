@@ -1,26 +1,18 @@
 class Train
-  attr_reader :speed, :type
+  attr_reader :speed, :number
 
-  def initialize(number, type)
+  def initialize(number)
     @number = number
-    @type = type
     @speed = 0
+    @wagons = []
   end
 
-  def increase_speed(value)
-    @speed += value
-  end
-
-  def decrease_speed(value)
-    value < @speed ? @speed -= value : @speed = 0
-  end
-
-  def add_wagon
-    @wagons += 1 if @speed == 0
+  def add_wagon(wagon)
+    @wagons << wagon if speed == 0
   end
 
   def unhook_wagon
-    @wagons -= 1 if @speed == 0 && @wagons > 0
+    @wagons.pop if @wagons.length>0 && @speed == 0
   end
 
   def set_route(route)
@@ -47,6 +39,21 @@ class Train
     else
        puts "Train is at the starting station"
     end
+  end
+
+  private
+  #ниже методы не используются снаружи класса train
+
+  def wagons_number
+    @wagons.length
+  end
+
+  def increase_speed(value)
+    @speed += value
+  end
+
+  def decrease_speed(value)
+    value < @speed ? @speed -= value : @speed = 0
   end
 
   def current_station

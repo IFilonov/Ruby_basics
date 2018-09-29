@@ -1,4 +1,2 @@
-require_relative "train"
-
-class PassengerWagon < Wagon
+class PassengerWagon
 end
