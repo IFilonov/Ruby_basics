@@ -1,5 +1,6 @@
 class Train
   attr_reader :speed, :number
+  alias_method :info, :number
 
   def initialize(number)
     @number = number

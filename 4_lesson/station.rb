@@ -1,8 +1,9 @@
 class Station
-  attr_reader :number, :trains
+  attr_reader :name, :trains
+  alias_method :info, :name
 
-  def initialize(station_number)
-    @number = station_number
+  def initialize(station_name)
+    @name = station_name
     @trains = []
   end
 
@@ -19,5 +20,4 @@ class Station
   def get_trains_by_type(train_class)
     @trains.select { |train| train.class == train_class }
   end
-
 end
