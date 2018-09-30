@@ -1,8 +1,8 @@
 class Station
-  attr_reader :name
+  attr_reader :number, :trains
 
-  def initialize(station_name)
-    @name = station_name
+  def initialize(station_number)
+    @number = station_number
     @trains = []
   end
 
@@ -10,16 +10,14 @@ class Station
     @trains << train
   end
 
-  def get_trains_numbers
-    trains_numbers = ""
-    @trains.each do |train|
-      trains_numbers += "," if trains_numbers.length > 0
-      trains_numbers += train.number
-    end
-    return trains_numbers
-  end
-
   def send_train(train)
     @trains.delete(train)
   end
+
+  private
+#вывод поездов по типу не используется
+  def get_trains_by_type(train_class)
+    @trains.select { |train| train.class == train_class }
+  end
+
 end

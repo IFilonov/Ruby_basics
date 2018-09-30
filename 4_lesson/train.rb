@@ -12,7 +12,7 @@ class Train
   end
 
   def unhook_wagon
-    @wagons.pop if @wagons.length>0 && @speed == 0
+    @wagons.pop if @wagons.length > 0 && @speed == 0
   end
 
   def set_route(route)
