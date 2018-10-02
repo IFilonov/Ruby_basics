@@ -1,19 +1,25 @@
 class Train
-  attr_reader :speed, :number
+  attr_reader :speed, :number, :type, :wagons
   alias_method :info, :number
 
-  def initialize(number)
+  def initialize(number, type)
     @number = number
     @speed = 0
     @wagons = []
+    @type = type
   end
 
   def add_wagon(wagon)
-    @wagons << wagon if speed == 0
+    if speed == 0
+      if (self.instance_of?(CargoTrain) && wagon.instance_of?(CargoWagon)) ||
+        (self.instance_of?(PassengerTrain) && wagon.instance_of?(PassengerWagon))
+        @wagons << wagon
+      end
+    end
   end
 
-  def unhook_wagon
-    @wagons.pop if @wagons.length > 0 && @speed == 0
+  def unhook_wagon(wagon)
+    @wagons.delete(wagon) if @wagons.length > 0 && @speed == 0
   end
 
   def set_route(route)
