@@ -39,8 +39,8 @@ class Main
   QUIT_MENU = "q"
 
   TRAIN_CLASSES = [
-     { class_name: CargoTrain, menu_info: "Cargo", train_type: :CARGO_TYPE},
-     { class_name: PassengerTrain, menu_info: "Passenger", train_type: :PASSENGER_TYPE}
+     { class_name: CargoTrain, menu_info: "Cargo"},
+     { class_name: PassengerTrain, menu_info: "Passenger"}
   ]
 
   def initialize
@@ -105,7 +105,7 @@ private
   def create_train
     type_idx = get_selected_index("Select type of train to create", TRAIN_CLASSES)
     train_number = get_user_input("Enter new train number:")
-    @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number,TRAIN_CLASSES[type_idx][:train_type])
+    @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number)
   end
 
   def add_wagon_to_train
@@ -151,9 +151,13 @@ private
   end
 
   def set_route_to_train
-    route_index = get_selected_index("Select number of route to set to train", @routes)
-    train_index = get_selected_index("Select number of train to set route", @trains)
-    @trains[train_index].set_route(@routes[route_index])
+    if (@routes.size > 0)
+      route_index = get_selected_index("Select number of route to set to train", @routes)
+      train_index = get_selected_index("Select number of train to set route", @trains)
+      @trains[train_index].set_route(@routes[route_index])
+    else
+      puts "No created routes. Create route, first"
+    end
   end
 
   def move_train_forward

@@ -1,5 +1,5 @@
 class Train
-  attr_reader :speed, :number, :type, :wagons
+  attr_reader :speed, :number, :wagons
   alias_method :info, :number
 
   def initialize(number, type)
@@ -10,11 +10,9 @@ class Train
   end
 
   def add_wagon(wagon)
-    if speed == 0
-      if (self.instance_of?(CargoTrain) && wagon.instance_of?(CargoWagon)) ||
-        (self.instance_of?(PassengerTrain) && wagon.instance_of?(PassengerWagon))
-        @wagons << wagon
-      end
+    return unless speed == 0
+    if can_add_wagon?(wagon)
+      @wagons << wagon
     end
   end
 
