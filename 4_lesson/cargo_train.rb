@@ -12,5 +12,4 @@ class CargoTrain < Train
   def can_add_wagon?(wagon)
     wagon.instance_of?(CargoWagon)
   end
-
 end
