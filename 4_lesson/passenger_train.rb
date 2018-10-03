@@ -1,5 +1,4 @@
 require_relative "train"
-require_relative "passenger_wagon"
 
 class PassengerTrain < Train
 
@@ -9,7 +8,13 @@ class PassengerTrain < Train
     super(number, PASSENGER_TYPE)
   end
 
+  def add_wagon(wagon)
+    super(wagon) if can_add_wagon?(wagon)
+  end
+
+private
+
   def can_add_wagon?(wagon)
-    wagon.instance_of?(PassengerWagon)
+    !wagon.is_cargo?
   end
 end

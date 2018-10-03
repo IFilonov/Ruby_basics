@@ -11,9 +11,7 @@ class Train
 
   def add_wagon(wagon)
     return unless speed == 0
-    if can_add_wagon?(wagon)
-      @wagons << wagon
-    end
+    @wagons << wagon
   end
 
   def unhook_wagon(wagon)

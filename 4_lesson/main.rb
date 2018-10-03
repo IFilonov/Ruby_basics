@@ -104,74 +104,70 @@ private
 
   def create_train
     type_idx = get_selected_index("Select type of train to create", TRAIN_CLASSES)
-    train_number = get_user_input("Enter new train number:")
-    @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number)
+    if type_idx
+      train_number = get_user_input("Enter new train number:")
+      @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number)
+    end
   end
 
   def add_wagon_to_train
-    train_index = get_selected_index("Select number of train to add wagon", @trains)
-    wagon_amount = get_user_input("Enter amount of wagons to add:")
-    if @trains[train_index].instance_of?(CargoTrain)
-      wagon_amount.to_i.times { @trains[train_index].add_wagon(CargoWagon.new) }
-    else
-      wagon_amount.to_i.times { @trains[train_index].add_wagon(PassengerWagon.new) }
+    train_idx = get_selected_index("Select number of train to add wagon", @trains)
+    if train_idx
+      wagon_amount = get_user_input_i("Enter amount of wagons to add:")
+      if @trains[train_idx].instance_of?(CargoTrain)
+        wagon_amount.to_i.times { @trains[train_idx].add_wagon(CargoWagon.new) }
+      else
+        wagon_amount.to_i.times { @trains[train_idx].add_wagon(PassengerWagon.new) }
+      end
     end
   end
 
   def unhook_wagon_from_train
-    train_index = get_selected_index("Select number of train for unhook wagon", @trains)
-    if (@trains[train_index].wagons.size > 0 )
-      wagon_index = get_selected_index("Select number of wagon to unhook", @trains[train_index].wagons)
-      @trains[train_index].unhook_wagon(@trains[train_index].wagons[wagon_index])
-    else
-      puts "Selected train does not have wagons"
+    train_idx = get_selected_index("Select number of train for unhook wagon", @trains)
+    if train_idx
+      wagon_idx = get_selected_index("Select number of wagon to unhook", @trains[train_idx].wagons)
+      @trains[train_idx].unhook_wagon(@trains[train_idx].wagons[wagon_idx]) if wagon_idx
     end
   end
 
   def create_route
-    if @stations.size > 1
-      first_station_index = get_selected_index("Select number of start station", @stations)
-      end_station_index = get_selected_index("Select number of end station", @stations)
-      @routes << Route.new(@stations[first_station_index], @stations[end_station_index])
-    else
-      puts "Not enough stations!"
+    first_station_idx = get_selected_index("Select number of start station", @stations)
+    end_station_idx = get_selected_index("Select number of end station", @stations) if first_station_idx
+    if first_station_idx && end_station_idx
+      @routes << Route.new(@stations[first_station_idx], @stations[end_station_idx])
     end
   end
 
   def add_station_to_route
-    route_index = get_selected_index("Select number of route to add station", @routes)
-    station_index = get_selected_index("Select number of station to add", @stations)
-    @routes[route_index].add_station(@stations[station_index])
+    route_idx = get_selected_index("Select number of route to add station", @routes)
+    station_idx = get_selected_index("Select number of station to add", @stations) if station_idx
+    @routes[route_idx].add_station(@stations[station_idx]) if route_idx && station_idx
  end
 
   def delete_station_from_route
-    route_index = get_selected_index("Select number of route to del station", @routes)
-    station_index = get_selected_index("Select number of station to del", @stations)
-    @routes[route_index].del_station(@routes[route_index].stations[station_index])
+    route_idx = get_selected_index("Select number of route to del station", @routes)
+    station_idx = get_selected_index("Select number of station to del", @stations) if route_idx
+    @routes[route_idx].del_station(@routes[route_idx].stations[station_idx]) if route_idx && station_idx
   end
 
   def set_route_to_train
-    if (@routes.size > 0)
-      route_index = get_selected_index("Select number of route to set to train", @routes)
-      train_index = get_selected_index("Select number of train to set route", @trains)
-      @trains[train_index].set_route(@routes[route_index])
-    else
-      puts "No created routes. Create route, first"
-    end
+    route_idx = get_selected_index("Select number of route to set to train", @routes)
+    train_idx = get_selected_index("Select number of train to set route", @trains) if route_idx
+    @trains[train_idx].set_route(@routes[route_idx]) if route_idx && train_idx
   end
 
   def move_train_forward
-    train_index = get_selected_index("Select number of train to move forward", @trains)
-    @trains[train_index].go_next_station
+    train_idx = get_selected_index("Select number of train to move forward", @trains)
+    @trains[train_idx].go_next_station if train_idx
   end
 
   def move_train_backward
-    train_index = get_selected_index("Select number of train to move backward", @trains)
-    @trains[train_index].go_previous_station
+    train_idx = get_selected_index("Select number of train to move backward", @trains)
+    @trains[train_idx].go_previous_station if train_idx
   end
 
   def show_menu(menu)
-    puts "Enter number to select menu item or type q to exit:"
+    puts "Enter number to select menu item or type #{QUIT_MENU} to exit:"
     menu.each_with_index { |value, index| puts "#{index} - #{value[:label]}" }
   end
 
@@ -184,18 +180,35 @@ private
     gets.chomp.to_s
   end
 
-  def get_selected_index(text, collection)
-    user_input = ""
+  def get_user_input_i(text)
+    input_s = ""
     loop do
       puts text
-      collection.each_with_index do |obj, ind|
-        puts "#{ind} - #{obj.respond_to?("info") ? obj.info : obj[:menu_info]}"
-      end
-      user_input = get_user_input("Enter selected number:")
-      break if user_input.to_i.to_s == user_input && user_input.to_i < collection.size
-      puts "Selected wrong number"
+      input_s = gets.chomp.to_s
+      break if input_s.to_i.to_s == input_s
+      puts "Error. Type correct number"
     end
-    return user_input.to_i
+    return input_s.to_i
+  end
+
+  def get_selected_index(text, collection)
+    input_s = ""
+    if (collection.size > 0)
+      loop do
+        puts text
+        collection.each_with_index do |obj, ind|
+          puts "#{ind} - #{obj.respond_to?("info") ? obj.info : obj[:menu_info]}"
+        end
+        input_s = get_user_input("Enter selected number or type #{QUIT_MENU} to exit:")
+        break if (input_s.to_i.to_s == input_s && input_s.to_i < collection.size) || input_s == QUIT_MENU
+        puts "Error. Selected wrong number"
+      end
+    else
+      print "No objects to do action."
+      get_user_input(" Type any key to continue")
+      return nil
+    end
+    input_s == QUIT_MENU ? nil : input_s.to_i
   end
 end
 
