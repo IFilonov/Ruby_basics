@@ -1,5 +1,4 @@
 require_relative "train"
-require_relative "cargo_wagon"
 
 class CargoTrain < Train
 
@@ -16,6 +15,6 @@ class CargoTrain < Train
 private
 
   def can_add_wagon?(wagon)
-    wagon.instance_of?(CargoWagon)
+    wagon.is_cargo?
   end
 end
