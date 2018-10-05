@@ -1,10 +1,14 @@
+require_relative "instancecounter"
+
 class Route
+  include InstanceCounter
   attr_reader :stations, :number
   alias_method :info, :number
 
   def initialize(begin_station, end_station)
     @stations = [begin_station, end_station]
     @number = self
+    register_instance
   end
 
   def add_station(station)

@@ -1,12 +1,20 @@
+require_relative "manufacturer"
+require_relative "instancecounter"
+
 class Train
+  include Manufacturer
+  include InstanceCounter
   attr_reader :speed, :number, :wagons
   alias_method :info, :number
+  @@trains = []
 
   def initialize(number, type)
     @number = number
     @speed = 0
     @wagons = []
     @type = type
+    @@trains << self
+    register_instance
   end
 
   def add_wagon(wagon)
@@ -42,6 +50,10 @@ class Train
     else
        puts "Train is at the starting station"
     end
+  end
+
+  def self.find(number)
+    @@trains.select { |train| train.number == number }
   end
 
   private
