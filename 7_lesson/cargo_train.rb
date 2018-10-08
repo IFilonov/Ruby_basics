@@ -12,7 +12,7 @@ class CargoTrain < Train
     super(wagon) if can_add_wagon?(wagon)
   end
 
-private
+  private
 
   def can_add_wagon?(wagon)
     wagon.is_cargo?

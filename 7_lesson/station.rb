@@ -1,11 +1,12 @@
 require_relative "instance_counter"
+require_relative "validation"
 
 class Station
   include InstanceCounter
+  include Validation
   attr_reader :name, :trains
   alias_method :info, :name
   @@stations = []
-  @trains = []
 
   def self.all
     @@stations
@@ -13,7 +14,8 @@ class Station
 
   def initialize(station_name)
     @name = station_name
-    raise "Station name too long" unless valid?
+    validate!
+    @trains = []
     @@stations << self
     register_instance
   end
@@ -32,8 +34,9 @@ class Station
     @trains.select { |train| train.class == train_class }
   end
 
-  def valid?
-    return @name.length <= 20
+  def validate!
+    if @name.nil? || @name.length > 20 || @name.length < 2
+      raise "Error: station name must be from 2 to 20 symbols!"
+    end
   end
-
 end

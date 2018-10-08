@@ -1,13 +1,15 @@
 require_relative "instance_counter"
+require_relative "validation"
 
 class Route
   include InstanceCounter
+  include Validation
   attr_reader :stations, :number
   alias_method :info, :number
 
   def initialize(begin_station, end_station)
     @stations = [begin_station, end_station]
-    raise "Stations cannot be same in route" unless valid?
+    validate!
     @number = self
     register_instance
   end
@@ -26,7 +28,11 @@ class Route
     @stations.each { |station| station.info }
   end
 
-  def valid?
-    return @stations[0] != @stations[1]
+  def validate!
+    if @stations[0] == @stations[1]
+      raise "Error: stations cannot be same in route!"
+    elsif !@stations[0].instance_of?(Station) || !@stations[0].instance_of?(Station)
+      raise "Error: first and end station must be class of Station!"
+    end
   end
 end

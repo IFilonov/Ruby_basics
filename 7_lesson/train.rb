@@ -1,24 +1,26 @@
 require_relative "manufacturer"
 require_relative "instance_counter"
+require_relative "validation"
 
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validation
   attr_reader :speed, :number, :wagons
   alias_method :info, :number
   @@trains = {}
   @wagons = []
 
-  ERR_MESSAGE = {
-    ERR_TRAIN_NUM: "Train number not valid",
-    ERR_TRAIN_TYPE: "Train type cannot be null"
+  ERR_MESSAGES = {
+    ERR_TRAIN_NUM: "Error: train number not valid!",
+    ERR_TRAIN_TYPE: "Error: train type cannot be null!"
   }
 
   def initialize(number, type)
     @number = number
     @speed = 0
     @type = type
-    raise ERR_MESSAGE[@err_code] unless valid?
+    validate!
     @@trains[number] = self
     register_instance
   end
@@ -89,10 +91,10 @@ class Train
     @route.stations[@current_station - 1] if @current_station > 0
   end
 
-  def valid?
+  def validate!
     regexp = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
-    @err_code = :ERR_TRAIN_NUM unless @number =~ regexp
-    @err_code = :ERR_TRAIN_TYPE if @type.nil?
-    return @err_code.nil?
+    err_code = :ERR_TRAIN_NUM unless @number =~ regexp
+    err_code = :ERR_TRAIN_TYPE if @type.nil?
+    raise ERR_MESSAGES[err_code] if err_code
   end
 end

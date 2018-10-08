@@ -104,15 +104,17 @@ private
 
   def create_train
     attempt = 0
-    type_idx = get_selected_index("Select type of train to create", TRAIN_CLASSES)
-    if type_idx
-      train_number = get_user_input("Enter new train number:")
-      @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number)
+    begin
+      type_idx = get_selected_index("Select type of train to create", TRAIN_CLASSES)
+      if type_idx
+        train_number = get_user_input("Enter new train number:")
+        @trains << TRAIN_CLASSES[type_idx][:class_name].new(train_number)
+      end
+    rescue RuntimeError => e
+      puts e
+      attempt += 1
+      retry if attempt < 3
     end
-  rescue RuntimeError => ErrMessage
-    puts ErrMessage
-    attempt += 1
-    retry if attempt < 3
   end
 
   def add_wagon_to_train
