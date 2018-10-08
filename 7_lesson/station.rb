@@ -39,7 +39,7 @@ class Station
   end
 
   def validate!
-    regexp = /^[a-zA-Z0-9]{2,20}$/
+    regexp = /^\w{2,}.{,18}$/
     raise ERR_MGS[:WRONG_NAME] unless @name =~ regexp
   end
 end
