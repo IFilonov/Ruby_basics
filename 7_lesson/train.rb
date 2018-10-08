@@ -93,8 +93,7 @@ class Train
 
   def validate!
     regexp = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
-    err_code = :ERR_TRAIN_NUM unless @number =~ regexp
-    err_code = :ERR_TRAIN_TYPE if @type.nil?
-    raise ERR_MESSAGES[err_code] if err_code
+    raise ERR_MESSAGES[:ERR_TRAIN_NUM] unless @number =~ regexp
+    raise ERR_MESSAGES[:ERR_TRAIN_TYPE] if @type.nil?
   end
 end

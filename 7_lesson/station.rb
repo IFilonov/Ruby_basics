@@ -8,6 +8,10 @@ class Station
   alias_method :info, :name
   @@stations = []
 
+  ERR_MGS = {
+    WRONG_NAME: "Error: station name must be from 2 to 20 symbols!"
+  }
+
   def self.all
     @@stations
   end
@@ -35,8 +39,7 @@ class Station
   end
 
   def validate!
-    if @name.nil? || @name.length > 20 || @name.length < 2
-      raise "Error: station name must be from 2 to 20 symbols!"
-    end
+    regexp = /^[a-zA-Z0-9]{2,20}$/
+    raise ERR_MGS[:WRONG_NAME] unless @name =~ regexp
   end
 end

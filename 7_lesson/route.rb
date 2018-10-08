@@ -7,6 +7,11 @@ class Route
   attr_reader :stations, :number
   alias_method :info, :number
 
+  ERR_MGS = {
+    SAME_STATIONS: "Error: stations cannot be same in route!",
+    WRONG_CLASS: "Error: first and end station must be class of Station!"
+  }
+
   def initialize(begin_station, end_station)
     @stations = [begin_station, end_station]
     validate!
@@ -29,10 +34,7 @@ class Route
   end
 
   def validate!
-    if @stations[0] == @stations[1]
-      raise "Error: stations cannot be same in route!"
-    elsif !@stations[0].instance_of?(Station) || !@stations[0].instance_of?(Station)
-      raise "Error: first and end station must be class of Station!"
-    end
+    raise ERR_MGS[:SAME_STATIONS] if @stations.first == @stations.last
+    raise ERR_MGS[:WRONG_CLASS] unless @stations.first.is_a?(Station) && @stations.last.is_a?(Station)
   end
 end
