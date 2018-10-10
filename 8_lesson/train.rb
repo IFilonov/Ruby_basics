@@ -6,10 +6,10 @@ class Train
   include Manufacturer
   include InstanceCounter
   include Validation
-  attr_reader :speed, :number, :wagons
+  attr_reader :speed, :number, :wagons, :type
   alias_method :info, :number
   @@trains = {}
-  @wagons = []
+  NUMBER_REGEXP = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
 
   ERR_MESSAGES = {
     ERR_TRAIN_NUM: "Error: train number not valid!",
@@ -20,6 +20,7 @@ class Train
     @number = number
     @speed = 0
     @type = type
+    @wagons = []
     validate!
     @@trains[number] = self
     register_instance
@@ -64,6 +65,10 @@ class Train
     @@trains[number]
   end
 
+  def each_wagon(&block)
+    @wagons.each { |wagon| block.call(wagon) }
+  end
+
   private
   #ниже методы не используются снаружи класса train
 
@@ -92,8 +97,7 @@ class Train
   end
 
   def validate!
-    regexp = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
-    raise ERR_MESSAGES[:ERR_TRAIN_NUM] unless @number =~ regexp
+    raise ERR_MESSAGES[:ERR_TRAIN_NUM] unless @number =~ NUMBER_REGEXP
     raise ERR_MESSAGES[:ERR_TRAIN_TYPE] if @type.nil?
   end
 end

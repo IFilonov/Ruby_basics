@@ -32,6 +32,10 @@ class Station
     @trains.delete(train)
   end
 
+  def each_train(&block)
+    @trains.each { |train| yeild(train) }
+  end
+
   private
 #вывод поездов по типу не используется
   def get_trains_by_type(train_class)

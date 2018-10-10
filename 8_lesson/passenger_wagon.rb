@@ -2,11 +2,15 @@ require_relative "wagon"
 
 class PassengerWagon < Wagon
   attr_reader :free_seats
+  PASSENGER_TYPE = :passenger
 
-  def initialize(number_seats)
-    @number_seats = number_seats
-    @free_seats = number_seats
+
+  def initialize(seats, number)
+    @seats = seats
+    @free_seats = seats
+    @type = PASSENGER_TYPE
     validate!
+    super(number)
   end
 
   def is_cargo?
@@ -14,15 +18,14 @@ class PassengerWagon < Wagon
   end
 
   def occupy_seat
-    @block_occupy = lambda { |x| x -= 1 if x }
-    @block_occupy.call(@free_seats)
+    @free_seats = OCCUPY.call(@free_seats)
   end
 
   def occupied_seats
-    @number_seats - @free_seats
+    GET_OCCUPIED.call(@seats, @free_seats)
   end
 
    def validate!
-    raise ERR_MGS[:WRONG_VOLUME] unless @number_seats.to_s =~ VALID_REGEXP
+    raise ERR_MGS[:WRONG_NUMBER] unless @seats.to_s =~ VALID_REGEXP
   end
 end

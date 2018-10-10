@@ -25,6 +25,8 @@ class Main
     { label: "Create train", handler: :create_train },
     { label: "Add wagon to train", handler: :add_wagon_to_train },
     { label: "Unhook wagon from train", handler: :unhook_wagon_from_train },
+    { label: "Show wagon list of train", handler: :show_wagon_list_of_train },
+    { label: "Occupy place in wagon", handler: :occupy_place_in_wagon },
     { label: "Move train forward", handler: :move_train_forward },
     { label: "Move train backward", handler: :move_train_backward }
   ]
@@ -98,7 +100,7 @@ private
     @stations.each do |station|
       puts "Station: #{station.info}"
       puts "Trains on station:" if station.trains.size > 0
-      station.trains.each { |train| puts "#{train.info}" }
+      station.trains.each { |train| puts "Number: #{train.info} Type: #{train.type} Wagons: #{train.wagons.size}" }
     end
   end
 
@@ -122,11 +124,11 @@ private
     if train_idx
       wagon_amount = get_user_input_i("Enter amount of wagons to add:")
       if @trains[train_idx].instance_of?(CargoTrain)
-        volume = get_user_input_i("Enter number of volume of wagon:")
-        wagon_amount.to_i.times { @trains[train_idx].add_wagon(CargoWagon.new(volume)) }
+        volume = get_user_input_i("Enter volume of each wagon:")
+        wagon_amount.to_i.times { |i| @trains[train_idx].add_wagon(CargoWagon.new(volume, i)) }
       else
-        number_seats = get_user_input_i("Enter number of seats in wagon:")
-        wagon_amount.to_i.times { @trains[train_idx].add_wagon(PassengerWagon.new(number_seats)) }
+        num_seats = get_user_input_i("Enter number of seats in each wagon:")
+        wagon_amount.to_i.times { |i| @trains[train_idx].add_wagon(PassengerWagon.new(num_seats, i)) }
       end
     end
   end
@@ -136,6 +138,29 @@ private
     if train_idx
       wagon_idx = get_selected_index("Select number of wagon to unhook", @trains[train_idx].wagons)
       @trains[train_idx].unhook_wagon(@trains[train_idx].wagons[wagon_idx]) if wagon_idx
+    end
+  end
+
+  def occupy_place_in_wagon
+    train_idx = get_selected_index("Select number of train for occupy place", @trains)
+    if train_idx
+      wagon_idx = get_selected_index("Select number of wagon to occupy", @trains[train_idx].wagons)
+      if @trains[train_idx].instance_of?(CargoTrain)
+        volume = get_user_input_i("Enter volume to occupy in wagon:")
+        @trains[train_idx].wagons[wagon_idx].occupy_volume(volume)
+      else
+        @trains[train_idx].wagons[wagon_idx].occupy_seat
+      end
+    end
+  end
+
+  def show_wagon_list_of_train
+    train_idx = get_selected_index("Select number of train for show list of wagons", @trains)
+    if train_idx
+      @trains[train_idx].each_wagon do |wagon|
+        free_space = wagon.is_cargo? ? "Free volume: #{wagon.free_volume}" : "Free seats: #{wagon.free_seats}"
+        puts "Wagon: #{wagon.number} Type: #{wagon.type} #{free_space}"
+      end
     end
   end
 

@@ -2,11 +2,14 @@ require_relative "wagon"
 
 class CargoWagon < Wagon
   attr_reader :free_volume
+  CARGO_TYPE = :cargo
 
-  def initialize(volume)
+  def initialize(volume, number)
     @volume = volume
     @free_volume = volume
+    @type = CARGO_TYPE
     validate!
+    super(number)
   end
 
   def is_cargo?
@@ -14,11 +17,11 @@ class CargoWagon < Wagon
   end
 
   def occupy_volume(volume)
-    @free_volume -= volume if @free_volume > 0
+    @free_volume = OCCUPY.call(@free_volume, volume)
   end
 
   def occupied_volume
-    @volume - @free_volume
+    GET_OCCUPIED.call(@volume, @free_volume)
   end
 
   private
