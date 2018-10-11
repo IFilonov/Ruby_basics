@@ -148,9 +148,9 @@ private
       wagon_idx = get_selected_index("Select number of wagon to occupy", @trains[train_idx].wagons)
       if @trains[train_idx].instance_of?(CargoTrain)
         volume = get_user_input_i("Enter volume to occupy in wagon:")
-        @trains[train_idx].wagons[wagon_idx].occupy_volume(volume)
+        @trains[train_idx].wagons[wagon_idx].occupy_place(volume)
       else
-        @trains[train_idx].wagons[wagon_idx].occupy_seat
+        @trains[train_idx].wagons[wagon_idx].occupy_place
       end
     end
   end
@@ -159,8 +159,7 @@ private
     train_idx = get_selected_index("Select number of train for show list of wagons", @trains)
     if train_idx
       @trains[train_idx].each_wagon do |wagon|
-        free_space = wagon.is_cargo? ? "Free volume: #{wagon.free_volume}" : "Free seats: #{wagon.free_seats}"
-        puts "Wagon: #{wagon.number} Type: #{wagon.type} #{free_space}"
+        puts "Wagon: #{wagon.number} Type: #{wagon.type} Free place: #{wagon.free_place}"
       end
     end
   end

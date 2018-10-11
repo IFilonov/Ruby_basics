@@ -3,31 +3,23 @@ require_relative "manufacturer"
 class Wagon
   include Manufacturer
 
-  attr_reader :number, :type
-  VALID_REGEXP = /^[1-9]\d*$/
+  attr_reader :number, :type, :place, :free_place
 
-  ERR_MGS = {
-    WRONG_NUMBER: "Error: value must be any number greater then zero!",
-    NOT_ENOUGH_VALUE: "Error: no free place to occupy!"
-  }
-
-  def initialize(number)
+  def initialize(place, number)
     @number = number
+    @place = place
+    @free_place = place
   end
 
   def info
     self
   end
 
-  protected
-
   def get_occupied
-    place - free_place
+    @place - @free_place
   end
 
-  def occupy(occupy_val)
-    raise ERR_MGS[:NOT_ENOUGH_VALUE] if free_place < occupy_val
-    raise ERR_MGS[:WRONG_NUMBER] unless occupy_val.to_s =~ VALID_REGEXP
-    free_place - occupy_val
+  def occupy_place(occupy_val)
+    @free_place -= occupy_val
   end
 end
