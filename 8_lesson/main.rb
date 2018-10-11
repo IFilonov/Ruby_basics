@@ -6,6 +6,7 @@ require_relative "passenger_wagon"
 require_relative "cargo_wagon"
 
 class Main
+  attr_accessor :stations, :trains, :routes
 
   APP_NAME = "RailWay Manager"
   VERSION = 1.2
@@ -100,7 +101,7 @@ private
     @stations.each do |station|
       puts "Station: #{station.info}"
       puts "Trains on station:" if station.trains.size > 0
-      station.trains.each { |train| puts "Number: #{train.info} Type: #{train.type} Wagons: #{train.wagons.size}" }
+      station.each_train { |train| puts "Number: #{train.info} Type: #{train.type} Wagons: #{train.wagons.size}" }
     end
   end
 
