@@ -4,12 +4,13 @@ module Accessors
       var_name = "@#{var}".to_sym
       define_method(var) { instance_variable_get(var_name) }
       define_method("#{var}=".to_sym) do |value|
-        @var_arr ||= {}
-        @var_arr[var_name] = [] if @var_arr[var_name].nil?
-        @var_arr[var_name].push(value) if @var_arr[var_name].last != value
+        @var_history ||= {}
+        @var_history[var_name] = [] if @var_history[var_name].nil?
+        prev_value = instance_variable_get(var_name)
+        @var_history[var_name].push(prev_value) if prev_value != value
         instance_variable_set(var_name, value)
       end
-      define_method("#{var}_history".to_sym) { @var_arr[var_name] }
+      define_method("#{var}_history".to_sym) { @var_history[var_name] if @var_history }
     end
   end
 

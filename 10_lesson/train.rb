@@ -1,14 +1,21 @@
 require_relative 'manufacturer'
 require_relative 'instance_counter'
 require_relative 'validation'
+require_relative 'accessors'
 
 class Train
   include Manufacturer
   include InstanceCounter
   include Validation
+  extend Accessors
 
   NUMBER_REGEXP = /^[a-zA-Z0-9]{3}-?[a-zA-Z0-9]{2}$/
-  attr_reader :speed, :number, :wagons, :type
+  attr_reader :wagons
+  attr_accesor_with_history :route
+  strong_attr_accessor :speed, Integer
+  strong_attr_accessor :number, String
+  strong_attr_accessor :type, String
+
   validate :type, :presence
   validate :number, :presence
   validate :number, :format, NUMBER_REGEXP

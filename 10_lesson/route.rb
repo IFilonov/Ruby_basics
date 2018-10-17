@@ -1,11 +1,16 @@
 require_relative 'instance_counter'
 require_relative 'validation'
 require_relative 'station'
+require_relative 'accessors'
 
 class Route
   include InstanceCounter
   include Validation
-  attr_reader :stations, :number
+  extend Accessors
+  attr_reader :stations
+  strong_attr_accessor :number, Route
+  strong_attr_accessor :begin_station, Station
+  strong_attr_accessor :end_station, Station
   alias info number
   validate :begin_station, :type, Station
   validate :end_station, :type, Station

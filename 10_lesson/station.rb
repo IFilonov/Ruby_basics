@@ -1,11 +1,14 @@
 require_relative 'instance_counter'
 require_relative 'validation'
+require_relative 'accessors'
 
 class Station
   include InstanceCounter
   include Validation
+  extend Accessors
   STATION_REGEXP = /^\w{2,}.{,18}$/
-  attr_reader :name, :trains
+  attr_reader :trains
+  strong_attr_accessor :name, String
   alias info name
   validate :name, :presence
   validate :name, :format, STATION_REGEXP

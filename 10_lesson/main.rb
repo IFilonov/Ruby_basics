@@ -5,12 +5,10 @@ require_relative 'station'
 require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 require_relative 'menu_processing'
-require_relative 'accessors'
 require_relative 'validation'
 
 class Main
   include MenuProcessing
-  extend Accessors
   attr_accessor :stations, :trains, :routes
 
   def initialize
